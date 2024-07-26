@@ -3,35 +3,23 @@ package Epic.fusiongames.entities.game;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Embeddable
 public class GameGenreId implements Serializable {
     private static final long serialVersionUID = -3733070201665316346L;
     @Column(name = "games_id", nullable = false)
-    private String gamesId;
+    private Integer gamesId;
 
     @Column(name = "genres_id", nullable = false)
-    private String genresId;
-
-    public String getGamesId() {
-        return gamesId;
-    }
-
-    public void setGamesId(String gamesId) {
-        this.gamesId = gamesId;
-    }
-
-    public String getGenresId() {
-        return genresId;
-    }
-
-    public void setGenresId(String genresId) {
-        this.genresId = genresId;
-    }
+    private Integer genresId;
 
     @Override
     public boolean equals(Object o) {

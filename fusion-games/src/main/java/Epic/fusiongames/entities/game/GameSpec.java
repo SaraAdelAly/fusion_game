@@ -1,18 +1,23 @@
 package Epic.fusiongames.entities.game;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import org.hibernate.annotations.UuidGenerator;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.Objects;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
+@Table(name="gamespec")
 public class GameSpec {
-
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "gamespec_id", nullable = false)
+    private Integer gamespecId;
 
     private String processor;
 
@@ -25,53 +30,18 @@ public class GameSpec {
     private Integer storage;
     private Integer memory;
 
-    public GameSpec() {}
 
-    public String getProcessor() {
-        return processor;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameSpec gameSpec = (GameSpec) o;
+        return Objects.equals(gamespecId, gameSpec.gamespecId) && Objects.equals(processor, gameSpec.processor) && Objects.equals(graphicsCard, gameSpec.graphicsCard) && Objects.equals(directXVersion, gameSpec.directXVersion) && Objects.equals(storage, gameSpec.storage) && Objects.equals(memory, gameSpec.memory);
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public int hashCode() {
+        return Objects.hash(gamespecId, processor, graphicsCard, directXVersion, storage, memory);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setProcessor(String processor) {
-        this.processor = processor;
-    }
-
-    public String getGraphicsCard() {
-        return graphicsCard;
-    }
-
-    public void setGraphicsCard(String graphicsCard) {
-        this.graphicsCard = graphicsCard;
-    }
-
-    public Integer getDirectXVersion() {
-        return directXVersion;
-    }
-
-    public void setDirectXVersion(Integer directXVersion) {
-        this.directXVersion = directXVersion;
-    }
-
-    public Integer getStorage() {
-        return storage;
-    }
-
-    public void setStorage(Integer storage) {
-        this.storage = storage;
-    }
-
-    public Integer getMemory() {
-        return memory;
-    }
-
-    public void setMemory(Integer memory) {
-        this.memory = memory;
-    }
 }

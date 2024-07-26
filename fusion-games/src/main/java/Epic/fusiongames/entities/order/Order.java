@@ -1,23 +1,32 @@
 package Epic.fusiongames.entities.order;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import Epic.fusiongames.entities.user.User;
 import Epic.fusiongames.entities.game.Game;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable {
 
     @Id
-    @UuidGenerator(style = Style.TIME)
-    private String id;
+    @Column(name = "order_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer orderId;
 
 
     @Column(name = "created_at", nullable = false)
@@ -40,63 +49,31 @@ public class Order {
     //     this.totalPrice = totalPrice;
     // }
 
-    {
-        totalPrice=0.0;
-    }
+//    {
+//        totalPrice=0.0;
+//    }
 
     public Order(LocalDate createdAt, Double totalPrice) {
         this.createdAt = createdAt;
         this.totalPrice = totalPrice;
     }
-
-    public Order() {}
-
     public Order(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public User getOrderingUser() {
-        return orderingUser;
-    }
-
-    public void setOrderingUser(User orderingUser) {
-        this.orderingUser = orderingUser;
-    }
-
-    public List<Game> getOrderedGames() {
-        return Collections.unmodifiableList(orderedGames.stream().map(OrderedGame::getGame).toList());
-    }
-    public List<OrderedGame> getOrderedGamesItem() {
-        return Collections.unmodifiableList(orderedGames);
+      @Override
+    public String toString() {
+        return "Order [id=" + orderId + ", createdAt=" + createdAt + ", totalPrice=" + totalPrice + "]";
     }
     @Override
-    public String toString() {
-        return "Order [id=" + id + ", createdAt=" + createdAt + ", totalPrice=" + totalPrice + "]";
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderId, order.orderId) && Objects.equals(createdAt, order.createdAt) && Objects.equals(totalPrice, order.totalPrice) && Objects.equals(orderingUser, order.orderingUser) && Objects.equals(orderedGames, order.orderedGames);
     }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId, createdAt, totalPrice, orderingUser, orderedGames);
+    }
 }

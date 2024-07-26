@@ -3,35 +3,24 @@ package Epic.fusiongames.entities.platform;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Embeddable
 public class PlatformGameId implements Serializable {
     private static final long serialVersionUID = 345024234683248235L;
     @Column(name = "game_id", nullable = false)
-    private String gameId;
+    private Integer gameId;
 
     @Column(name = "platform_id", nullable = false)
-    private String platformId;
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public String getPlatformId() {
-        return platformId;
-    }
-
-    public void setPlatformId(String platformId) {
-        this.platformId = platformId;
-    }
+    private Integer platformId;
 
     @Override
     public boolean equals(Object o) {

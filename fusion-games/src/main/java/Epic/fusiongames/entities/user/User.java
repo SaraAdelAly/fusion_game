@@ -1,30 +1,35 @@
 package Epic.fusiongames.entities.user;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import Epic.fusiongames.entities.cart.CartItem;
-import Epic.fusiongames.entities.game.Game;
 import Epic.fusiongames.entities.library.LibraryItem;
 import Epic.fusiongames.entities.order.Order;
-import Epic.fusiongames.entities.order.OrderedGame;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.annotations.UuidGenerator.Style;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable, UserDetails {
 
     @Id
-    @UuidGenerator(style = Style.TIME)
-    private String id;
+    @Column(name = "user_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String userId;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -56,8 +61,9 @@ public class User {
     @Column(nullable = false)
     private String gender;
 
-    @Column(nullable = false)
-    private Boolean isAdmin;
+    @NotNull
+    @Column(name = "is_admin" ,nullable = false ,columnDefinition="default '0'")
+    private Byte isAdmin;
 
     @OneToMany(mappedBy = "orderingUser")
     private Set<Order> orders;
@@ -75,12 +81,8 @@ public class User {
     private Double creditLimit;
 
 
-
-    public User() {}
-
-
     public User(String username, String firstName, String lastName, String email, String password, String salt, String phoneNumber,
-                LocalDate birthDate, String gender,String country, Boolean isAdmin) {
+                LocalDate birthDate, String gender,String country, Byte isAdmin) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -93,148 +95,13 @@ public class User {
         this.country = country;
         this.isAdmin = isAdmin;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public Boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public List<Order> getOrders() {
-        return Collections.unmodifiableList(orders.stream().toList());
-    }
-
-    public List<Game> getWishList() {
-        return Collections.unmodifiableList(wishItems.stream().map(WishItem::getGame).toList());
-    }
-
-    public List<Game> getCartGames(){
-        return Collections.unmodifiableList(cartItems.stream().map(CartItem::getGame).toList());
-    }
-    public List<CartItem> getCartItems(){
-        return cartItems;
-    }
-    public List<WishItem> getWishItems(){
-        return wishItems;
-    }
-
-    public Double getCreditLimit() {
-        return creditLimit;
-    }
-
-
-    public void setCreditLimit(Double creditLimit) {
-        this.creditLimit = creditLimit;
-    }
-
-
-    public List<Game> getOwnedGames(){
-        return Collections.unmodifiableList(library.stream().map(LibraryItem::getGame).toList());
-    }
-
-    public List<OrderedGame> getOrderedGames(){
-        return Collections.unmodifiableList(orders.stream().flatMap(order -> order.getOrderedGamesItem().stream()).toList());
-    }
-
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
-
-        if (id != null ? !id.equals(user.id) : user.id != null) return false;
+        if (userId != null ? !userId.equals(user.userId) : user.userId != null) return false;
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
@@ -245,7 +112,7 @@ public class User {
     @Override
     public int hashCode() {
         int result = 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
@@ -255,8 +122,33 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+        return "User [id=" + userId + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
                 + ", email=" + email + ", password=" + password + ", salt=" + salt + ", phoneNumber=" + phoneNumber
                 + ", birthDate=" + birthDate + ", gender=" + gender + ", isAdmin=" + isAdmin + "]";
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(isAdmin==1?"Admin":"User"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

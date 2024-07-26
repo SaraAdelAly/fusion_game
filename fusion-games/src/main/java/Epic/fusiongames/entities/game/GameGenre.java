@@ -2,9 +2,15 @@ package Epic.fusiongames.entities.game;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "games_genres")
 public class GameGenre {
@@ -21,34 +27,8 @@ public class GameGenre {
     @JoinColumn(name = "genres_id", nullable = false)
     private Genre genre;
 
-    public GameGenre() {}
-
     public GameGenre(Game game, Genre genre) {
         this.game = game;
-        this.genre = genre;
-    }
-
-    public GameGenreId getId() {
-        return id;
-    }
-
-    public void setId(GameGenreId id) {
-        this.id = id;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
@@ -63,7 +43,6 @@ public class GameGenre {
         if (!Objects.equals(game, gameGenre.game)) return false;
         return Objects.equals(genre, gameGenre.genre);
     }
-
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;

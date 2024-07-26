@@ -3,10 +3,20 @@ package Epic.fusiongames.entities.user;
 
 import Epic.fusiongames.entities.game.Game;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "wish_items")
-public class WishItem {
+public class WishItem implements Serializable {
     @EmbeddedId
     private WishItemId id = new WishItemId();
 
@@ -20,34 +30,21 @@ public class WishItem {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    public WishItem() {}
-
     public WishItem(User user, Game game) {
         this.user = user;
         this.game = game;
     }
 
-    public WishItemId getId() {
-        return id;
-    }
-    public void setId(WishItemId id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WishItem wishItem = (WishItem) o;
+        return Objects.equals(id, wishItem.id) && Objects.equals(user, wishItem.user) && Objects.equals(game, wishItem.game);
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, game);
     }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
 }

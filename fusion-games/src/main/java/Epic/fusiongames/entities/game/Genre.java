@@ -1,32 +1,36 @@
 package Epic.fusiongames.entities.game;
 
 
-import java.util.Collections;
-import java.util.List;
+
 import java.util.Objects;
 import java.util.Set;
 
 import Epic.fusiongames.entities.enums.GenreType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.annotations.UuidGenerator.Style;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="genres")
 public class Genre{
     @Id
-    @UuidGenerator(style = Style.TIME)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "genre_id", nullable = false)
+    private Integer genreId;
 
 
     @Enumerated(EnumType.STRING)
-    @Column(unique = true, nullable = false)
+    @Column(name="genre", unique = true, nullable = false)
     private GenreType genre;
 
     @OneToMany(mappedBy = "genre")
     private Set<GameGenre> gameGenres;
 
-    public Genre() {}
+
 
     public Genre(GenreType genre, Set<GameGenre> gameGenres) {
         this.genre = genre;
@@ -36,24 +40,9 @@ public class Genre{
         this.genre = genre;
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public GenreType getGenre() {
-        return genre;
-    }
-    public void setGenre(GenreType genre) {
-        this.genre = genre;
-    }
-    public List<Game> getGames() {
-        return Collections.unmodifiableList(gameGenres.stream().map(GameGenre::getGame).toList());
-    }
     @Override
     public String toString() {
-        return "Genre [id=" + id + ", genre=" + genre + "]";
+        return "Genre [id=" + genreId + ", genre=" + genre + "]";
     }
 
     public String getName(){
@@ -68,14 +57,14 @@ public class Genre{
 
         Genre genre1 = (Genre) o;
 
-        if (!Objects.equals(id, genre1.id)) return false;
+        if (!Objects.equals(genreId, genre1.genreId)) return false;
         if (genre != genre1.genre) return false;
         return Objects.equals(gameGenres, genre1.gameGenres);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = genreId != null ? genreId.hashCode() : 0;
         result = 31 * result + (genre != null ? genre.hashCode() : 0);
         result = 31 * result + (gameGenres != null ? gameGenres.hashCode() : 0);
         return result;

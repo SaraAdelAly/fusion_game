@@ -3,10 +3,19 @@ package Epic.fusiongames.entities.order;
 
 import Epic.fusiongames.entities.game.Game;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ordered_games")
-public class OrderedGame {
+public class OrderedGame implements Serializable {
     @EmbeddedId
     private OrderedGameId id = new OrderedGameId();
 
@@ -20,34 +29,21 @@ public class OrderedGame {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    public OrderedGame() {}
-
     public OrderedGame(Game game, Order order) {
         this.game = game;
         this.order = order;
     }
 
-    public OrderedGameId getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderedGame that = (OrderedGame) o;
+        return Objects.equals(id, that.id) && Objects.equals(game, that.game) && Objects.equals(order, that.order);
     }
 
-    public void setId(OrderedGameId id) {
-        this.id = id;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, game, order);
     }
 }

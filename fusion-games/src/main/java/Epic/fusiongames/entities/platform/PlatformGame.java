@@ -3,12 +3,20 @@ package Epic.fusiongames.entities.platform;
 
 import Epic.fusiongames.entities.game.Game;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "platforms_games")
-public class PlatformGame {
+public class PlatformGame implements Serializable {
     @EmbeddedId
     private PlatformGameId id = new PlatformGameId();
 
@@ -22,36 +30,13 @@ public class PlatformGame {
     @JoinColumn(name = "platform_id", nullable = false)
     private Platform platform;
 
-    public PlatformGame() {}
+
 
     public PlatformGame(Game game, Platform platform) {
         this.game = game;
         this.platform = platform;
     }
 
-    public PlatformGameId getId() {
-        return id;
-    }
-
-    public void setId(PlatformGameId id) {
-        this.id = id;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Platform getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(Platform platform) {
-        this.platform = platform;
-    }
 
     @Override
     public boolean equals(Object o) {

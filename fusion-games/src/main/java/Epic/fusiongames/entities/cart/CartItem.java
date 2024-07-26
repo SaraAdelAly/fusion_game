@@ -4,9 +4,16 @@ package Epic.fusiongames.entities.cart;
 import Epic.fusiongames.entities.game.Game;
 import Epic.fusiongames.entities.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "cart_items")
+
 public class CartItem {
     @EmbeddedId
     private CartItemId id = new CartItemId();
@@ -21,35 +28,11 @@ public class CartItem {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    public CartItem() {}
 
     public CartItem(User user, Game game) {
         this.user = user;
         this.game = game;
     }
 
-    public CartItemId getId() {
-        return id;
-    }
-
-    public void setId(CartItemId id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
 
 }

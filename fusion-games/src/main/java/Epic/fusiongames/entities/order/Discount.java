@@ -1,64 +1,45 @@
 package Epic.fusiongames.entities.order;
 
-import java.util.Collections;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 import Epic.fusiongames.entities.enums.DiscountType;
 import Epic.fusiongames.entities.game.Game;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.annotations.UuidGenerator.Style;
-//import gov.iti.fusion.models.enums.DiscountType;
-//import jakarta.json.bind.annotation.JsonbTransient;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+//import jakarta.json.bind.annotation.JsonbTransient;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="discounts")
-public class Discount {
+public class Discount implements Serializable {
 
     @Id
-    @UuidGenerator(style = Style.TIME)
-    private String id;
+    @Column(name = "discount_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer discountId;
+
+
     @Column(unique = true, nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private DiscountType type;
-    @OneToMany(mappedBy = "discount")
 
 //    @JsonbTransient
+    @OneToMany(mappedBy = "discount")
     private Set<Game> games;
     public Discount(DiscountType type) {
         this.type = type;
     }
-    public Discount() {}
 
     public Discount(DiscountType type, Set<Game> games) {
         this.type = type;
         this.games = games;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public DiscountType getType() {
-        return type;
-    }
-
-    public List<Game> getGames() {
-        return Collections.unmodifiableList(games.stream().toList());
-    }
-    public void setType( DiscountType type) {
-        this.type = type;
     }
 
     public String getName(){
@@ -66,7 +47,19 @@ public class Discount {
     }
     @Override
     public String toString() {
-        return "Discount [id=" + id + ", type=" + type + "]";
+        return "Discount [id=" + discountId + ", type=" + type + "]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Discount discount = (Discount) o;
+        return Objects.equals(discountId, discount.discountId) && type == discount.type && Objects.equals(games, discount.games);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(discountId, type, games);
+    }
 }

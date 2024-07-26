@@ -3,37 +3,25 @@ package Epic.fusiongames.entities.order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+@Getter
+@Setter
 @Embeddable
 public class OrderedGameId implements Serializable {
     private static final long serialVersionUID = -111631734670454815L;
     @Column(name = "game_id", nullable = false)
-    private String gameId;
+    private Integer gameId;
 
-    public OrderedGameId() {}
 
     @Column(name = "order_id", nullable = false)
-    private String orderId;
+    private Integer orderId;
 
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 
     @Override
     public boolean equals(Object o) {

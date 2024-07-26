@@ -2,48 +2,35 @@ package Epic.fusiongames.entities.cart;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Embeddable
 public class CartItemId implements Serializable {
     private static final long serialVersionUID = 3688429705141149562L;
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private Integer userId;
 
     @Column(name = "game_id", nullable = false)
-    private String gameId;
+    private Integer gameId;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        CartItemId entity = (CartItemId) o;
-        return Objects.equals(this.gameId, entity.gameId) &&
-                Objects.equals(this.userId, entity.userId);
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItemId that = (CartItemId) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(gameId, that.gameId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameId, userId);
+        return Objects.hash(userId, gameId);
     }
-
 }
